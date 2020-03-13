@@ -37,17 +37,20 @@ namespace SalesWebMvc_n
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<SalesWebMvc_nContext>(options =>
-                    //options.UseSqlServer(Configuration.GetConnectionString("SalesWebMvc_nContext")));
+            //options.UseSqlServer(Configuration.GetConnectionString("SalesWebMvc_nContext")));
             options.UseMySql(Configuration.GetConnectionString("SalesWebMvc_nContext"), builder =>
             builder.MigrationsAssembly("SalesWebMvc_n")));
+            //registro injecao de dependencia
+            services.AddScoped<SeedingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, SeedingService seedingService)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                seedingService.Seed();
             }
             else
             {
