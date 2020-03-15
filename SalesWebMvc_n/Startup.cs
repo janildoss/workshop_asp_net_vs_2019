@@ -11,6 +11,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using SalesWebMvc_n.Data;
+using SalesWebMvc_n.Services;
+
 
 namespace SalesWebMvc_n
 {
@@ -42,6 +44,7 @@ namespace SalesWebMvc_n
             builder.MigrationsAssembly("SalesWebMvc_n")));
             //registro injecao de dependencia
             services.AddScoped<SeedingService>();
+            services.AddScoped<SellerService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
