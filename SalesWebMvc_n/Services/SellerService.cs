@@ -7,9 +7,10 @@ using SalesWebMvc_n.Data;
 namespace SalesWebMvc_n.Services
 {
     public class SellerService
-    {
+    {  //cria uma instancia de Data: _context variavel do tipo SalesWebMvc_nContext
         private readonly SalesWebMvc_nContext _Context;
-
+        //Construtor recebe a classe de contexto que representa as 
+        //entidades(Seller,Departments,SalesRecord...)
         public SellerService(SalesWebMvc_nContext context) {
             _Context = context;
         }
@@ -18,6 +19,9 @@ namespace SalesWebMvc_n.Services
             return _Context.Seller.ToList(); 
         }
 
-
+        public void Insert(Seller obj) {
+            _Context.Add(obj);
+            _Context.SaveChanges();
+        }
     }
 }
