@@ -13,9 +13,9 @@ namespace SalesWebMvc_n.Controllers
     {
         //injecao de dependecia
         private readonly SellerService _sellerService;
-        private readonly DepartmentService _departmentService;
+        private readonly DepartmetService _departmentService;
 
-        public SellersController(SellerService sellerService,DepartmentService departmentService) {
+        public SellersController(SellerService sellerService, DepartmetService departmentService) {
             _sellerService = sellerService;
             _departmentService = departmentService;
         }
@@ -25,6 +25,7 @@ namespace SalesWebMvc_n.Controllers
             var list = _sellerService.FindAll();
             return View(list);
         }
+
         public IActionResult Create(){
             var departments = _departmentService.FindAll();
             var viewModel = new SellerFormViewModel { Departments = departments };
@@ -39,5 +40,22 @@ namespace SalesWebMvc_n.Controllers
             return RedirectToAction(nameof(Index));    
         }
 
+        public IActionResult Delete(int? id) {
+            if (id == null) {
+                return NotFound();
+            }
+            //se o id nao eh nulo busca pelo id passado
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null) {
+                return NotFound();            
+            }
+            return View(obj);       
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id) {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
