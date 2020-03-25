@@ -13,9 +13,10 @@ namespace SalesWebMvc_n.Controllers
     {
         //injecao de dependecia
         private readonly SellerService _sellerService;
-        private readonly DepartmetService _departmentService;
+        private readonly DepartmentService _departmentService;
 
-        public SellersController(SellerService sellerService, DepartmetService departmentService) {
+        public SellersController(SellerService sellerService, DepartmentService departmentService)
+        {
             _sellerService = sellerService;
             _departmentService = departmentService;
         }
@@ -26,7 +27,8 @@ namespace SalesWebMvc_n.Controllers
             return View(list);
         }
 
-        public IActionResult Create(){
+        public IActionResult Create()
+        {
             var departments = _departmentService.FindAll();
             var viewModel = new SellerFormViewModel { Departments = departments };
             return View(viewModel);
@@ -37,25 +39,43 @@ namespace SalesWebMvc_n.Controllers
         public IActionResult Create(Seller seller)
         {
             _sellerService.Insert(seller);
-            return RedirectToAction(nameof(Index));    
+            return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int? id) {
-            if (id == null) {
+        public IActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
                 return NotFound();
             }
             //se o id nao eh nulo busca pelo id passado
             var obj = _sellerService.FindById(id.Value);
-            if (obj == null) {
-                return NotFound();            
+            if (obj == null)
+            {
+                return NotFound();
             }
-            return View(obj);       
+            return View(obj);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id) {
+        public IActionResult Delete(int id)
+        {
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index));
+        }
+        public IActionResult Details(int? id) 
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            //se o id nao eh nulo busca pelo id passado
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
         }
     }
 }

@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace SalesWebMvc_n.Services
 {
-    public class DepartmetService
+    public class DepartmentService
     {
         private readonly SalesWebMvc_nContext _Context;
         //Construtor recebe a classe de contexto que representa as 
         //entidades(Seller,Departments,SalesRecord...)
-        public DepartmetService(SalesWebMvc_nContext context)
+        public DepartmentService(SalesWebMvc_nContext context)
         {
             _Context = context;
         }

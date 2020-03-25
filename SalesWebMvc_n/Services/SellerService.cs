@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMvc_n.Models;
 using SalesWebMvc_n.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace SalesWebMvc_n.Services
 {
     public class SellerService
@@ -26,7 +28,7 @@ namespace SalesWebMvc_n.Services
         }
         //Busca no banco o vendedor pelo id passado
         public Seller FindById(int id) {
-            return _context.Seller.FirstOrDefault(obj => obj.Id == id);      
+            return _context.Seller.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);      
         }
         //Remove o vendedor da lista e salva no banco a delecao 
         public void Remove(int id) {
