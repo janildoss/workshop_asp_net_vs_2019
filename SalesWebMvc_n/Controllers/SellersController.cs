@@ -30,7 +30,7 @@ namespace SalesWebMvc_n.Controllers
         }
 
         public async Task<IActionResult> Create()
-        { 
+        {
 
             var departments = await _departmentService.FindAllAsync();
             var viewModel = new SellerFormViewModel { Departments = departments };
@@ -55,8 +55,8 @@ namespace SalesWebMvc_n.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {                
-                return RedirectToAction(nameof(Error), new { message = "Id not provided" });               
+            {
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
             //se o id nao eh nulo busca pelo id passado
             var obj = await _sellerService.FindByIdAsync(id.Value);
@@ -71,8 +71,15 @@ namespace SalesWebMvc_n.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _sellerService.RemoveAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _sellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(IntegrityException e)
+            {
+                return RedirectToAction(nameof(Error), new { message = e.Message });
+            }
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -99,7 +106,7 @@ namespace SalesWebMvc_n.Controllers
             var obj = await _sellerService.FindByIdAsync(id.Value);
             if (obj == null)
             {
-               
+
                 return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
             List<Department> departments = await _departmentService.FindAllAsync();
@@ -111,7 +118,7 @@ namespace SalesWebMvc_n.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task< IActionResult> Edit(int id, Seller seller)
+        public async Task<IActionResult> Edit(int id, Seller seller)
         {  //O framework testa se e valido a execucao com o javascript desabilitado.
             if (!ModelState.IsValid)
             {
@@ -122,11 +129,11 @@ namespace SalesWebMvc_n.Controllers
 
             if (id != seller.Id)
             {
-                return RedirectToAction(nameof(Error), new { message = "Id mismatch"});
+                return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }
             try
             {
-               await _sellerService.UpdateAsync(seller);
+                await _sellerService.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             }
             catch (ApplicationException e)
@@ -137,10 +144,11 @@ namespace SalesWebMvc_n.Controllers
             //  {
             //     return NotFound();
             //  }
-        } 
+        }
 
         //este metodo nao acessa dados por isso nao precisa ser assynchrono
-        public IActionResult Error(string message) {
+        public IActionResult Error(string message)
+        {
 
             var viewModel = new ErrorViewModel
             {
