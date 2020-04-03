@@ -13,14 +13,16 @@ namespace SalesWebMvc_n.Services
         private readonly SalesWebMvc_nContext _Context;
         //Construtor recebe a classe de contexto que representa as 
         //dependencias (SalesRecordService...)
-        public  SalesRecordService(SalesWebMvc_nContext context)
+        public SalesRecordService(SalesWebMvc_nContext context)
         {
-           _Context = context;
+            _Context = context;
         }
 
-        public async Task<List<SalesRecord>> FindByDate(DateTime? minDate, DateTime? maxDate) {
+        public async Task<List<SalesRecord>> FindByDate(DateTime? minDate, DateTime? maxDate)
+        {
             var result = from obj in _Context.SalesRecord select obj;
-            if (minDate.HasValue) {
+            if (minDate.HasValue)
+            {
                 result = result.Where(x => x.Date >= minDate.Value);
             }
             if (maxDate.HasValue)
@@ -31,6 +33,25 @@ namespace SalesWebMvc_n.Services
                 .Include(x => x.Seller)
                 .Include(x => x.Seller.Department)
                 .OrderByDescending(x => x.Date)
+                .ToListAsync();
+        }
+
+        public async Task<List<IGrouping<Department,SalesRecord>>> FindByDateGrouping(DateTime? minDate, DateTime? maxDate)
+        {
+            var result = from obj in _Context.SalesRecord select obj;
+            if (minDate.HasValue)
+            {
+                result = result.Where(x => x.Date >= minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                result = result.Where(x => x.Date <= maxDate.Value);
+            }
+            return await result
+                .Include(x => x.Seller)
+                .Include(x => x.Seller.Department)
+                .OrderByDescending(x => x.Date)
+                .GroupBy(x => x.Seller.Department) //IGrouping acima
                 .ToListAsync();
         }
 
